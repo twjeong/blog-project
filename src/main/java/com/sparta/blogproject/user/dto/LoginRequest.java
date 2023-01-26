@@ -1,5 +1,7 @@
 package com.sparta.blogproject.user.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,8 @@ import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class LoginRequest {
     @NotBlank
     @Size(min = 4, max = 8)

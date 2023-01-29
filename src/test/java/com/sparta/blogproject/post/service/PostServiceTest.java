@@ -31,6 +31,7 @@ class PostServiceTest {
 
     @Test
     void createPost() {
+
         // given
         PostRequestDto request = new PostRequestDto();
         User user = new User();

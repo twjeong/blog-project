@@ -1,5 +1,7 @@
 package com.sparta.blogproject.user.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class SignupRequest {
 
@@ -26,7 +30,7 @@ public class SignupRequest {
     @NotBlank
     private String email;
 
-    private boolean admin = false;
-    private String adminToken = "";
+    private boolean admin;
+    private String adminToken;
 
 }

@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,10 +29,19 @@ import java.util.Date;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class JwtUtil {
 
-    private final UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
+
+    public JwtUtil() {
+        byte[] bytes = Base64.getDecoder().decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(bytes);
+    }
+
+    @Autowired
+    public JwtUtil(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String REFRESH_HEADER = "refresh_token";
     public static final String AUTHORIZATION_KEY = "auth";
@@ -39,16 +49,16 @@ public class JwtUtil {
     private static final long TOKEN_TIME = 60 * 60 * 1000L;
     private static final long REFRESH_TOKEN_VALID_TIME = 60 * 60 * 24 * 7 * 1000L; // 7 일
 
-    @Value("${jwt.secret.key}")
-    private String secretKey;
+    //@Value("${jwt.secret.key}")
+    private String secretKey = "7ZWt7ZW0OTntmZTsnbTtjIXtlZzqta3snYTrhIjrqLjshLjqs4TroZzrgpjslYTqsIDsnpDtm4zrpa3tlZzqsJzrsJzsnpDrpbzrp4zrk6TslrTqsIDsnpA=";
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-    @PostConstruct
-    public void init() {
-        byte[] bytes = Base64.getDecoder().decode(secretKey);
-        key = Keys.hmacShaKeyFor(bytes);
-    }
+//    @PostConstruct
+//    public void init() {
+//        byte[] bytes = Base64.getDecoder().decode(secretKey);
+//        key = Keys.hmacShaKeyFor(bytes);
+//    }
 
     // header 토큰 가져오기
     public String resolveToken(HttpServletRequest request) {

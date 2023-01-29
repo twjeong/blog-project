@@ -27,9 +27,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+
+    private final PasswordEncoder passwordEncoder;
     // ADMIN_TOKEN
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
-    private final PasswordEncoder passwordEncoder;
+
 
     @Transactional
     public ResponseStatusDto signup(@Valid SignupRequest signupRequest) {
@@ -83,13 +85,13 @@ public class UserService {
 
     @Transactional
     public void reIssue(TokenRequestDto tokenRequestDto, HttpServletResponse response) {
-        if(!jwtUtil.validateTokenExceptExpiration(tokenRequestDto.getRefreshToken())){
+        if (!jwtUtil.validateTokenExceptExpiration(tokenRequestDto.getRefreshToken())) {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
 
         User user = findUserByToken(tokenRequestDto);
 
-        if(!user.getRefreshToken().equals(tokenRequestDto.getRefreshToken())){
+        if (!user.getRefreshToken().equals(tokenRequestDto.getRefreshToken())) {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
 

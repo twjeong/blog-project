@@ -7,6 +7,7 @@ import com.sparta.blogproject.user.dto.SignupRequest;
 import com.sparta.blogproject.user.dto.StatusEnum;
 import com.sparta.blogproject.user.entity.User;
 import com.sparta.blogproject.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
@@ -33,10 +35,18 @@ class UserServiceTest {
     private UserService userService;
 
     @Spy
-    private JwtUtil jwtUtil;
+    private JwtUtil jwtUtil = new JwtUtil(username -> null);
 
     @Spy
     private BCryptPasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void prepare() {
+        ReflectionTestUtils.setField(jwtUtil,
+                "secretKey", // jwtUtil의 secretKey값이 저장될 변수
+                "7ZWt7ZW0OTntmZTsnbTtjIXtlZzqta3snYTrhIjrqLjshLjqs4TroZzrgpjslYTqsIDsnpDtm4zrpa3tlZzqsJzrsJzsnpDrpbzrp4zrk6TslrTqsIDsnpA="); // secretKey의 값
+        jwtUtil.init(); // jwtUtil에서 @PostConstructor가 동작하지 않기 때문에, 임의로 실행시켜야 함
+    }
 
     @Test
     @DisplayName("회원 가입")
